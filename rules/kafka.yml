@@ -1,0 +1,18 @@
+groups:
+  - name: kafka
+    rules:
+    - alert: KafkaConsumersGroup
+      expr: sum(avg(sum(kafka_consumergroup_lag{app_group=~"$app_group"}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 500000
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Kafka lag more than 500k for *{{ $labels.app_group }}*"
+    - alert: KafkaConsumersGroup
+      expr: sum(avg(sum(kafka_consumergroup_lag{app_group=~"$app_group"}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 1000000
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Kafka lag more than 1mio for *{{ $labels.app_group }}*"
+
