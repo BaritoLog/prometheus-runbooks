@@ -1,0 +1,35 @@
+groups:
+  - name: ElasticSearch
+    rules:
+    - alert: ElasticUnassignedShards
+      expr: elasticsearch_cluster_health_unassigned_shards{} > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+              summary: "Unassigned shards, current: {{ $value }}"
+              dashboard: "http://katulampa.barito.golabs.io/d/kvhvVsOZz/elasticsearch?orgId=1&var-interval=$__auto_interval_interval&var-cluster={{ $labels.app_group }}&var-name=All"
+    - alert: ElasticClusterRed
+      expr: elasticsearch_cluster_health_status{color="red"} == 1
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Elastic Cluster Red"
+        dashboard: "http://katulampa.barito.golabs.io/d/kvhvVsOZz/elasticsearch?orgId=1&var-interval=$__auto_interval_interval&var-cluster={{ $labels.app_group }}&var-name=All"
+    - alert: ElasticClusterYellow
+      expr: elasticsearch_cluster_health_status{color="yellow"} == 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Elastic Cluster Yellow"
+        dashboard: "http://katulampa.barito.golabs.io/d/kvhvVsOZz/elasticsearch?orgId=1&var-interval=$__auto_interval_interval&var-cluster={{ $labels.app_group }}&var-name=All"
+    - alert: ElasticExporterTimeout
+      expr: count({__name__=~"elasticsearch_clusterinfo_version_info|elasticsearch_jvm_buffer_pool_used_bytes"}) by (app_group) < 2
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Exporter experienced timeout when fetch elasticsearch data"
+        dashboard: "http://katulampa.barito.golabs.io/d/kvhvVsOZz/elasticsearch?orgId=1&var-interval=$__auto_interval_interval&var-cluster={{ $labels.app_group }}&var-name=All"

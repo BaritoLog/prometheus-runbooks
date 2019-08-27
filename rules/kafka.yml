@@ -1,18 +1,19 @@
 groups:
   - name: kafka
     rules:
-    - alert: KafkaConsumersGroup
-      expr: sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 500000
+    - alert: KafkaLag
+      expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 100000
       for: 5m
       labels:
         severity: warning
       annotations:
-        summary: "Kafka lag more than 500k for *{{ $labels.app_group }}*"
-    - alert: KafkaConsumersGroup
-      expr: sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 1000000
-      for: 5m
+        summary: "Kafka lag more than 100k, current: {{ $value | humanize}}"
+        dashboard: "http://katulampa.barito.golabs.io/d/jwPKIsniz/kafka-detail?refresh=1m&orgId=1&var-app_group={{ $labels.app_group}}&var-instance=All&var-topic=All&from=now-1d&to=now"
+    - alert: KafkaLag
+      expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 1000000
+      for: 1m
       labels:
         severity: critical
       annotations:
-        summary: "Kafka lag more than 1mio for *{{ $labels.app_group }}*"
-
+        summary: "Kafka lag more than 1M, current: {{ $value | humanize}}"
+        dashboard: "http://katulampa.barito.golabs.io/d/jwPKIsniz/kafka-detail?refresh=1m&orgId=1&var-app_group={{ $labels.app_group}}&var-instance=All&var-topic=All&from=now-1d&to=now"
