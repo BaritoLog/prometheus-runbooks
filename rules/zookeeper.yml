@@ -1,0 +1,19 @@
+groups:
+  - name: Zookeeper
+    rules:
+    - alert: ZookeeperDown
+      expr: zk_up < 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Zookeeper down on instance: {{ $labels.instance }}"
+        dashboard: "http://katulampa.barito.golabs.io/d/_xSf7yOZk/zookeeper?refresh=1m&orgId=1&var-app_group={{ $labels.app_group}}&var-instances=All"
+    - alert: ZookeeperDown
+      expr: avg(zk_up) by (app_group) == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "All zookeeper down"
+        dashboard: "http://katulampa.barito.golabs.io/d/_xSf7yOZk/zookeeper?refresh=1m&orgId=1&var-app_group={{ $labels.app_group}}&var-instances=All"
