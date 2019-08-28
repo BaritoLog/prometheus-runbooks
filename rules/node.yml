@@ -29,4 +29,18 @@ groups:
         severity: critical
       annotations:
         summary: "Memory usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+    - alert: HighCpuLoad
+      expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
+    - alert: HighCpuLoad
+      expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
 
