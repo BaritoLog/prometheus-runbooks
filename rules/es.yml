@@ -1,0 +1,31 @@
+groups:
+  - name: ElasticSearch
+    rules:
+    - alert: ElasticUnassignedShards
+      expr: elasticsearch_cluster_health_unassigned_shards{} > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Unassigned shards, {{ $labels.instance }}, current: {{ $value }}"
+    - alert: ElasticClusterRed
+      expr: elasticsearch_cluster_health_status{color="red"} == 1
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Elastic Cluster Red, {{ $labels.instance }}"
+    - alert: ElasticClusterYellow
+      expr: elasticsearch_cluster_health_status{color="yellow"} == 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Elastic Cluster Yellow, {{ $labels.instance }}"
+    - alert: ElasticExporterTimeout
+      expr: count({__name__=~"elasticsearch_clusterinfo_version_info|elasticsearch_jvm_buffer_pool_used_bytes"}) by (app_group) < 2
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Exporter experienced timeout when fetch elasticsearch data, {{ $labels.instance }}"
