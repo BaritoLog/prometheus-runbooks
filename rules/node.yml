@@ -1,15 +1,29 @@
 groups:
   - name: Node
     rules:
-    - alert: DiskSpaceHighUsage
+    - alert: ZFSDiskSpaceHighUsage
       expr: zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"} * 100 / (zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"}  + zfs_dataset_available_bytes{name="local",pool="local",type="filesystem"} ) > 90
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+    - alert: ZFSDiskSpaceHighUsage
+      expr: zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"} * 100 / (zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"}  + zfs_dataset_available_bytes{name="local",pool="local",type="filesystem"} ) > 95
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+    - alert: DiskSpaceHighUsage
+      expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
       for: 5m
       labels:
         severity: warning
       annotations:
         summary: "Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
     - alert: DiskSpaceHighUsage
-      expr: zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"} * 100 / (zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"}  + zfs_dataset_available_bytes{name="local",pool="local",type="filesystem"} ) > 95
+      expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 95
       for: 5m
       labels:
         severity: critical
