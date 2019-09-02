@@ -19,13 +19,6 @@ groups:
       expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[30s]) + avg_over_time(node_memory_Cached_bytes[30s]) + avg_over_time(node_memory_Buffers_bytes[30s])) / avg_over_time(node_memory_MemTotal_bytes[30s]))) > 90
       for: 10m
       labels:
-        severity: warning
-      annotations:
-        summary: "Memory usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
-    - alert: HighMemoryUsage
-      expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[30s]) + avg_over_time(node_memory_Cached_bytes[30s]) + avg_over_time(node_memory_Buffers_bytes[30s])) / avg_over_time(node_memory_MemTotal_bytes[30s]))) > 95
-      for: 5m
-      labels:
         severity: critical
       annotations:
         summary: "Memory usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
