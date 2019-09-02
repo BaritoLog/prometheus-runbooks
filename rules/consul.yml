@@ -1,7 +1,7 @@
 groups:
   - name: Consul
     rules:
-    - alert: ContainerCritical
+    - alert: ContainerDown
       expr: consul_health_node_status{check="serfHealth", status="critical"} == 1
       for: 2m
       labels:
