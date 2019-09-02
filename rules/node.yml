@@ -36,4 +36,11 @@ groups:
         severity: critical
       annotations:
         summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
+    - alert: NodeDown
+      expr: count(node_load1{} offset 1d) by (instance) - count(node_load1{}) by (instance) > 0
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Node {{ $labels.instance }} is down"
 
