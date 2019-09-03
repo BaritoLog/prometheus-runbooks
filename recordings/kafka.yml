@@ -1,0 +1,5 @@
+groups:
+  - name: kafka_recording
+    rules:
+    - record: kafka_consumergroup_current_offset:scraptime
+      expr: timestamp(min(kafka_consumergroup_current_offset{consumergroup="barito-group"}) by (app_group, instance))
