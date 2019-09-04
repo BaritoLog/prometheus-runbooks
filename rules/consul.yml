@@ -15,3 +15,17 @@ groups:
         severity: critical
       annotations:
         summary: "Consul is down for *{{ $labels.app_group}}*, instance *{{ $labels.instance }}*"
+    - alert: ServiceHealthcheckFailed
+      expr: max(consul_health_node_status{status="critical"}) by (app_group, node, check) == 1
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Healtcheck failed for *{{ $labels.node }}*, {{ $labels.check }}"
+    - alert: ServiceHealthcheckFailed
+      expr: max(consul_health_node_status{status="warning"}) by (app_group, node, check) == 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Healtcheck failed for *{{ $labels.node }}*, {{ $labels.check }}"
