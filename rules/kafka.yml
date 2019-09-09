@@ -23,6 +23,13 @@ groups:
       annotations:
         summary: "Exporter in one of kafka is down (there's probability the kafka itself is down)"
     - alert: KafkaDown
+      expr: count(kafka_brokers{}) by (app_group) - max(kafka_brokers{}) by (app_group) > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "One or more kafka is down on `{{ $labels.app_group}}`"
+    - alert: KafkaDown
       expr: avg(kafka_brokers{}) by (app_group) == 0
       for: 1m
       labels:
