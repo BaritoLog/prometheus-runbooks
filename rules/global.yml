@@ -7,4 +7,4 @@ groups:
       labels:
         severity: warning
       annotations:
-        summary: "Message loss at `{{ $value | humanize }}` in last hour for `{{ $labels.app_group}}.{{ $labels.topic }}`"
+        summary: "Message loss at `{{ $value | humanize }}%` in last hour for `{{ $labels.app_group}}.{{ $labels.topic }}`"
