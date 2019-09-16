@@ -2,4 +2,4 @@ groups:
   - name: es_recording
     rules:
     - record: elasticsearch_indices_docs_primary:per_topic
-      expr: sum by (app_group, topic) ( elasticsearch_indices_docs_primary{topic=~".*_logs", topic!=".monitoring-es-6_logs", topic!=".monitoring-kibana-6_logs"}' ) 
+      expr: sum by (app_group, topic) ( elasticsearch_indices_docs_primary{topic=~".*_logs", topic!=".monitoring-es-6_logs", topic!=".monitoring-kibana-6_logs"} ) 
