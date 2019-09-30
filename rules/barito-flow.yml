@@ -1,7 +1,7 @@
 groups:
   - name: Barito Flow
     rules:
-      - alert: Message Loss
+      - alert: Barito Flow Message Loss
         expr: ((increase(kafka_topic_partition_current_offset:per_app_group_topic[1h]) - increase(elasticsearch_indices_docs_primary:per_topic[1h]) ) * 100 / increase(kafka_topic_partition_current_offset:per_app_group_topic[1h])) > 10
         for: 5m
         labels:

@@ -1,14 +1,14 @@
 groups:
   - name: Zookeeper
     rules:
-      - alert: Zookeeper Down
+      - alert: Zookeeper Server Down
         expr: zk_up < 1
         for: 10m
         labels:
           severity: warning
         annotations:
           summary: "Zookeeper down on instance: {{ $labels.instance }}"
-      - alert: Zookeeper Down
+      - alert: Zookeeper Server Down
         expr: avg(zk_up) by (app_group) == 0
         for: 2m
         labels:

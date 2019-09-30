@@ -8,21 +8,28 @@ groups:
           severity: critical
         annotations:
           summary: "Node {{ $labels.instance }} is down"
-      - alert: High Cpu Load
+      - alert: Node CPU High Load
         expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
         for: 10m
         labels:
           severity: warning
         annotations:
           summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
-      - alert: High Cpu Load
+      - alert: Node CPU High Load
         expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
         for: 5m
         labels:
           severity: critical
         annotations:
           summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
-      - alert: High Memory Usage
+      - alert: Node Memory High Usage
+        expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[30s]) + avg_over_time(node_memory_Cached_bytes[30s]) + avg_over_time(node_memory_Buffers_bytes[30s])) / avg_over_time(node_memory_MemTotal_bytes[30s]))) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+      - alert: Node Memory High Usage
         expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[30s]) + avg_over_time(node_memory_Cached_bytes[30s]) + avg_over_time(node_memory_Buffers_bytes[30s])) / avg_over_time(node_memory_MemTotal_bytes[30s]))) > 90
         for: 5m
         labels:
