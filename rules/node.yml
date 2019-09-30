@@ -3,56 +3,56 @@ groups:
     rules:
       - alert: Node Down
         expr: count(node_load1{} offset 1d) by (instance) - count(node_load1{}) by (instance) > 0
-        for: 5m
+        for: 2m
         labels:
           severity: critical
         annotations:
           summary: "Node {{ $labels.instance }} is down"
-      # - alert: High Cpu Load
-      #   expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
-      #   for: 10m
-      #   labels:
-      #     severity: warning
-      #   annotations:
-      #     summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
+      - alert: High Cpu Load
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
       - alert: High Cpu Load
         expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
-        for: 10m
+        for: 5m
         labels:
           severity: critical
         annotations:
           summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
       - alert: High Memory Usage
         expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[30s]) + avg_over_time(node_memory_Cached_bytes[30s]) + avg_over_time(node_memory_Buffers_bytes[30s])) / avg_over_time(node_memory_MemTotal_bytes[30s]))) > 90
-        for: 10m
+        for: 5m
         labels:
           severity: critical
         annotations:
           summary: "Memory usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
-      # - alert: ZFS Diskspace High Usage
-      #   expr: zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"} * 100 / (zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"}  + zfs_dataset_available_bytes{name="local",pool="local",type="filesystem"} ) > 80
-      #   for: 10m
-      #   labels:
-      #     severity: warning
-      #   annotations:
-      #     summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+      - alert: ZFS Diskspace High Usage
+        expr: zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"} * 100 / (zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"}  + zfs_dataset_available_bytes{name="local",pool="local",type="filesystem"} ) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
       - alert: ZFS Diskspace High Usage
         expr: zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"} * 100 / (zfs_dataset_used_bytes{name="local",pool="local",type="filesystem"}  + zfs_dataset_available_bytes{name="local",pool="local",type="filesystem"} ) > 90
-        for: 10m
+        for: 5m
         labels:
           severity: critical
         annotations:
           summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
-      # - alert: Diskspace High Usage
-      #   expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 80
-      #   for: 10m
-      #   labels:
-      #     severity: warning
-      #   annotations:
-      #     summary: "Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+      - alert: Diskspace High Usage
+        expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
       - alert: Diskspace High Usage
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
-        for: 10m
+        for: 5m
         labels:
           severity: critical
         annotations:

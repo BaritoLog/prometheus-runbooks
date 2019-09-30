@@ -1,45 +1,45 @@
 groups:
   - name: kafka
     rules:
-    - alert: KafkaLag
-      expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 100000
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "Kafka lag more than 100k, current: {{ $value | humanize}}"
-    - alert: KafkaLag
-      expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 1000000
-      for: 1m
-      labels:
-        severity: critical
-      annotations:
-        summary: "Kafka lag more than 1M, current: {{ $value | humanize}}"
-    - alert: KafkaDown
-      expr: (count(kafka_brokers{} offset 1d) by (app_group) or vector(0)) - count(kafka_brokers{}) by (app_group) > 0
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "Exporter in one of kafka is down (there's probability the kafka itself is down)"
-    - alert: KafkaDown
-      expr: count(kafka_brokers{}) by (app_group) - max(kafka_brokers{}) by (app_group) > 0
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "One or more kafka is down on `{{ $labels.app_group}}`"
-    - alert: KafkaDown
-      expr: avg(kafka_brokers{}) by (app_group) == 0
-      for: 1m
-      labels:
-        severity: critical
-      annotations:
-        summary: "All kafka in {{ $labels.app_group}} are down"
-    - alert: KafkaExporterError
-      expr: time() - max_over_time(kafka_consumergroup_current_offset:scraptime[1d]) > 300
-      for: 10s
-      labels:
-        severity: warning
-      annotations:
-        summary: "Kafka exporter in `{{ $labels.app_group }}` can't fetch consumer group lag, instance `{{ $labels.instance}}`"
+      - alert: Kafka Lag
+        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 100000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka lag more than 100k, current: {{ $value | humanize}}"
+      - alert: Kafka Lag
+        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 1000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kafka lag more than 1M, current: {{ $value | humanize}}"
+      - alert: Kafka Down
+        expr: (count(kafka_brokers{} offset 1d) by (app_group) or vector(0)) - count(kafka_brokers{}) by (app_group) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exporter in one of kafka is down (there's probability the kafka itself is down)"
+      - alert: Kafka Down
+        expr: count(kafka_brokers{}) by (app_group) - max(kafka_brokers{}) by (app_group) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "One or more kafka is down on `{{ $labels.app_group}}`"
+      - alert: Kafka Down
+        expr: avg(kafka_brokers{}) by (app_group) == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "All kafka in {{ $labels.app_group}} are down"
+      - alert: Kafka Exporter Error
+        expr: time() - max_over_time(kafka_consumergroup_current_offset:scraptime[1d]) > 300
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka exporter in `{{ $labels.app_group }}` can't fetch consumer group lag, instance `{{ $labels.instance}}`"
