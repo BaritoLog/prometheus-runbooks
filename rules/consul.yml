@@ -24,7 +24,7 @@ groups:
           summary: "Healtcheck failed for *{{ $labels.node }}*, {{ $labels.check }}"
       - alert: Consul Detected Service Healthcheck Failed
         expr: max(consul_health_node_status{status="critical"}) by (app_group, node, check) == 1
-        for: 5m
+        for: 10m
         labels:
           severity: critical
         annotations:

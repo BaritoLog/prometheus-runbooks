@@ -19,7 +19,7 @@ groups:
         expr: (count(kafka_brokers{} offset 1d) by (app_group) or vector(0)) - count(kafka_brokers{}) by (app_group) > 0
         for: 10m
         labels:
-          severity: warning
+          severity: info
         annotations:
           summary: "Exporter in one of kafka is down (there's probability the kafka itself is down)"
       - alert: Kafka Server Down
