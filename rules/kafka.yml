@@ -10,7 +10,7 @@ groups:
           summary: "Kafka lag more than 100k, current: {{ $value | humanize}}"
       - alert: Kafka Consumer Lag
         expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 1000000
-        for: 5m
+        for: 10m
         labels:
           severity: critical
         annotations:
@@ -38,8 +38,8 @@ groups:
           summary: "All kafka in {{ $labels.app_group}} are down"
       - alert: Kafka Exporter Error
         expr: time() - max_over_time(kafka_consumergroup_current_offset:scraptime[1d]) > 600
-        for: 10m
+        for: 15m
         labels:
-          severity: warning
+          severity: info
         annotations:
           summary: "Kafka exporter in `{{ $labels.app_group }}` can't fetch consumer group lag, instance `{{ $labels.instance}}`"
