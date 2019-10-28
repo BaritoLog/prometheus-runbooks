@@ -29,3 +29,10 @@ groups:
           severity: critical
         annotations:
           summary: "Healtcheck failed for *{{ $labels.node }}*, {{ $labels.check }}"
+      - alert: Consul Missing Node Metrics
+        expr: max_over_time(consul_catalog_service_node_healthy[2d]) unless consul_catalog_service_node_healthy
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Missing Consul node metrics for *{{ $labels.node }}*"
