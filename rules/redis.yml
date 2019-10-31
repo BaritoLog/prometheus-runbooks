@@ -12,7 +12,7 @@ groups:
         expr: time() - redis_rdb_last_save_timestamp_seconds > 60 * 60 * 24
         for: 5m
         labels:
-          severity: error
+          severity: warning
         annotations:
           summary: "Missing backup for 24 hours (instance {{ $labels.instance }})"
       - alert: Redis Replication Broken
