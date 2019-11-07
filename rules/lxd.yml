@@ -1,0 +1,10 @@
+groups:
+  - name: LXD
+    rules:
+      - alert: LXD Container Down
+        expr: lxd_container_running_status == 0
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container `{{ $labels.container_name }}` of `{{ $labels.instance }}` is down"
