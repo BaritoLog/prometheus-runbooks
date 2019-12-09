@@ -12,8 +12,8 @@ groups:
 
       - alert: Barito Flow TPS Excedeed
         expr: |
-          increase(barito_producer_tps_exceeded_total[2m]) > 0
-        for: 1m
+          increase(barito_producer_tps_exceeded_total[1m]) > 0
+        for: 5m
         labels:
           severity: warning
         annotations:
