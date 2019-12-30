@@ -5,3 +5,5 @@ groups:
       expr: timestamp(min(kafka_consumergroup_current_offset{consumergroup="barito-group"}) by (app_group, instance))
     - record: kafka_topic_partition_current_offset:per_app_group_topic
       expr: avg by (app_group, topic) ( sum by (app_group, topic, instance) ( kafka_topic_partition_current_offset{topic!="__consumer_offsets"} ) )  
+    - record: kafka_incoming_log_per_hour
+      expr: avg(sum(increase(kafka_topic_partition_current_offset{}[1h])) by (topic, instance, app_group)) by (topic, app_group)
