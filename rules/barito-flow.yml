@@ -10,9 +10,9 @@ groups:
         annotations:
           summary: "Message loss at `{{ $value | humanize }}%` in last hour for `{{ $labels.app_group}}.{{ $labels.topic }}`"
 
-      - alert: Barito Flow TPS Excedeed
+      - alert: Barito Flow TPS Excedeed (Spike)
         expr: |
-          increase(barito_producer_tps_exceeded_total[1m]) > 0
+          increase(barito_producer_tps_exceeded_total[1m]) > (increase(barito_producer_tps_exceeded_total[1m] offset 1m) * 1.5)
         for: 5m
         labels:
           severity: warning
