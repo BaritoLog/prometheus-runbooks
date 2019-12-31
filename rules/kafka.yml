@@ -2,19 +2,19 @@ groups:
   - name: kafka
     rules:
       - alert: Kafka Consumer Lag
-        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 100000
+        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 5)
         for: 10m
         labels:
           severity: warning
         annotations:
-          summary: "Kafka lag more than 100k, current: {{ $value | humanize}}"
+          summary: "Kafka lag more than 5m * current TPM, current: {{ $value | humanize}}"
       - alert: Kafka Consumer Lag
-        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > 1000000
+        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group)) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 10m
         labels:
           severity: critical
         annotations:
-          summary: "Kafka lag more than 1M, current: {{ $value | humanize}}"
+          summary: "Kafka lag more than 15m * current TPM , current: {{ $value | humanize}}"
       - alert: Kafka Server Down
         expr: (count(kafka_brokers{} offset 1d) by (app_group) or vector(0)) - count(kafka_brokers{}) by (app_group) > 0
         for: 10m
