@@ -29,3 +29,10 @@ groups:
           severity: warning
         annotations:
           summary: "Exporter experienced timeout when fetch elasticsearch data, {{ $labels.instance }}"
+      - alert: ElasticsearchNodesNotMatch
+        expr: count by (app_group) (elasticsearch_cluster_health_number_of_nodes{app_group!="hino", app_group!="hitzu"}) != avg by (app_group) (elasticsearch_cluster_health_number_of_nodes{app_group!="hino", app_group!="hitzu"})
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Number of container not match with total registered nodes in the cluster"
