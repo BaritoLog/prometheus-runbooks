@@ -50,3 +50,10 @@ groups:
           severity: info
         annotations:
           summary: "Kafka exporter in `{{ $labels.app_group }}` can't fetch consumer group lag, instance `{{ $labels.instance}}`"
+      - alert: GlobalThroughputDrop
+        expr: 100 - ((sum(kafka_incoming_log_per_minute) * 100) / sum(kafka_incoming_log_per_minute offset 5m)) > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Barito global throughput drop more than 10% compared last 5m"
