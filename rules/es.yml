@@ -36,3 +36,10 @@ groups:
           severity: critical
         annotations:
           summary: "Number of container not match with total registered nodes in the cluster"
+      - alert: ElasticSearch Read Only Index
+        expr: sum by (app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "There are {{ $value | humanize }} number of read-only index, this will cause data loss"
