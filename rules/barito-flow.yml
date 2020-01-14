@@ -17,14 +17,6 @@ groups:
           severity: warning
         annotations:
           summary: "`{{ $value | humanize }}` message(s) are discarded because of TPS exceeded for `{{ $labels.app_group }}.{{ $labels.topic }}`"
-      - alert: Barito Flow TPS Excedeed (Spike)
-        expr: |
-          increase(barito_producer_tps_exceeded_total[1m]) > (increase(barito_producer_tps_exceeded_total[1m] offset 1m) * 1.5)
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "`{{ $value | humanize }}` message(s) are discarded because of TPS exceeded for `{{ $labels.app_group }}.{{ $labels.topic }}`"
       - alert: Barito Flow Consumer Failed Request 
         expr: |
           sum(increase(barito_consumer_log_stored_total{result!="201", result!="400"}[1m])) by (app_group, result) > 10
