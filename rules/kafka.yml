@@ -22,6 +22,20 @@ groups:
           severity: critical
         annotations:
           summary: "Kafka lag more than 15m * current TPM for 20 minutes, current: {{ $value | humanize}}"
+      - alert: Kafka Topic Undereplicated Partition
+        expr: sum by (app_group, topic) (kafka_topic_partition_under_replicated_partition{topic!="__consumer_offsets"} == 1) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka topic under replicated partition, `{{ $labels.app_group }}.{{ $labels.topic }}`\nProbably one kafka is down"
+      - alert: Kafka Topic Undereplicated Partition
+        expr: sum by (app_group, topic) (kafka_topic_partition_under_replicated_partition{topic!="__consumer_offsets"} > 1) > 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kafka topic under replicated partition, `{{ $labels.app_group }}.{{ $labels.topic }}`\nProbably more than one kafka are down"
       - alert: Kafka Server Down
         expr: (count(kafka_brokers{} offset 1d) by (app_group) or vector(0)) - count(kafka_brokers{}) by (app_group) > 0
         for: 10m
