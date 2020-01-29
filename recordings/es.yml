@@ -3,3 +3,5 @@ groups:
     rules:
     - record: elasticsearch_indices_docs_primary:per_topic
       expr: sum by (app_group, topic) ( elasticsearch_indices_docs_primary{topic=~".*_logs", topic!=".monitoring-es-6_logs", topic!=".monitoring-kibana-6_logs"} ) 
+    - record: elasticsearch_indices_docs_primary:per_app_group
+      expr: sum by(app_group) (increase(elasticsearch_indices_docs_primary{topic=~".*logs", topic!~"\\..*"}[1m]) < 1000000)
