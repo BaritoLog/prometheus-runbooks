@@ -2,14 +2,14 @@ groups:
   - name: kafka
     rules:
       - alert: Kafka Consumer Lag (experimental)
-        expr: round(sum by (app_group) (kafka_lag_manual_query) )> (sum by (app_group) (kafka_incoming_log_per_minute{}) * 5) 
+        expr: round(sum by (app_group) (kafka_lag_manual_query) > 50000 )> (sum by (app_group) (kafka_incoming_log_per_minute{}) * 5) 
         for: 2m
         labels:
           severity: warning
         annotations:
           summary: "Kafka lag more than 5m * current TPM, current: {{ $value | humanize}}"
       - alert: Kafka Consumer Lag (experimental)
-        expr: round(sum by (app_group) (kafka_lag_manual_query) )> (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15) 
+        expr: round(sum by (app_group) (kafka_lag_manual_query) > 50000 )> (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15) 
         for: 5m
         labels:
           severity: critical
