@@ -50,3 +50,10 @@ groups:
           severity: critical
         annotations:
           summary: "Elasticsearch global throughput drop more than 15% compared to last 10m"
+      - alert: ElasticSearch High Heap Memory Usage
+        expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High heap-memory usage on ElasticSearch `{{ $labels.name }}` with host `{{ $labels.host }}`"
