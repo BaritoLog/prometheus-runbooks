@@ -79,7 +79,7 @@ groups:
         annotations:
           summary: "Kafka exporter in `{{ $labels.app_group }}` can't fetch consumer group lag, instance `{{ $labels.instance}}`"
       - alert: KafkaGlobalThroughputDrop
-        expr: 100 - ((sum(kafka_incoming_log_per_minute) * 100) / sum(kafka_incoming_log_per_minute offset 10m)) > 15
+        expr: 100 - ((sum(kafka_incoming_log_per_minute < 1000000) * 100) / sum(kafka_incoming_log_per_minute offset 10m < 1000000)) > 15
         for: 1m
         labels:
           severity: critical

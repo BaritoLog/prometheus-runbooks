@@ -44,7 +44,7 @@ groups:
         annotations:
           summary: "There are {{ $value | humanize }} number of read-only index, this will cause data loss"
       - alert: ElasticsearchGlobalThroughputDrop
-        expr: 100 - ((sum(elasticsearch_indices_docs_primary:per_app_group) * 100) / sum(elasticsearch_indices_docs_primary:per_app_group offset 10m)) > 15
+        expr: 100 - ((sum(elasticsearch_indices_docs_primary:per_app_group < 1000000) * 100) / sum(elasticsearch_indices_docs_primary:per_app_group offset 10m < 1000000)) > 15
         for: 1m
         labels:
           severity: critical
