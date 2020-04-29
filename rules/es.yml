@@ -51,7 +51,7 @@ groups:
         annotations:
           summary: "Elasticsearch global throughput drop more than 15% compared to last 10m"
       - alert: ElasticSearch High Heap Memory Usage
-        expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90
+        expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90 AND elasticsearch_jvm_memory_max_bytes > 5 * 1000 * 1000 * 1000
         for: 1m
         labels:
           severity: critical
