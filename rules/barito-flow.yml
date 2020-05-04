@@ -10,20 +10,22 @@ groups:
           tag: barito-flow-message-loss
         annotations:
           summary: "Message loss at `{{ $value | humanize }}%` in last hour for `{{ $labels.app_group}}.{{ $labels.topic }}`"
-      - alert: Barito Flow TPS Excedeed (Spike)
+      - alert: Barito Flow TPS Exceeded (Spike)
         expr: |
           increase(barito_producer_tps_exceeded_total[1m]) > (increase(barito_producer_tps_exceeded_total[1m] offset 1m) * 1.5)
         for: 5m
         labels:
           severity: warning
+          tag: barito-flow-tps-exceeded-spike
         annotations:
           summary: "`{{ $value | humanize }}` message(s) are discarded because of TPS exceeded for `{{ $labels.app_group }}.{{ $labels.topic }}`"
-      - alert: Barito Flow Consumer Failed Request 
+      - alert: Barito Flow Consumer Failed Request
         expr: |
           sum(increase(barito_consumer_log_stored_total{result!="201", result!="400"}[1m])) by (app_group, result) > 10
         for: 1m
         labels:
           severity: critical
+          tag: barito-flow-consumer-failed-request
         annotations:
           summary: "There are `{{ $value | humanize }}` requests with status `{{ $labels.result }}`"
       - alert: Barito Flow Consumer Missing Metrics
@@ -32,6 +34,7 @@ groups:
         for: 5m
         labels:
           severity: critical
+          tag: barito-flow-consumer-missing-metrics
         annotations:
           summary: "Missing Barito Flow Consumer node metrics for `{{ $labels.app_group }}` instance `{{ $labels.instance }}`"
       - alert: Barito Flow Producer Missing Metrics
@@ -40,5 +43,6 @@ groups:
         for: 2m
         labels:
           severity: critical
+          tag: barito-flow-producer-missing-metrics
         annotations:
           summary: "Missing Barito Flow Producer node metrics for `{{ $labels.app_group }}` instance `{{ $labels.instance }}`"
