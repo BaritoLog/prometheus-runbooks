@@ -57,3 +57,10 @@ groups:
           severity: critical
         annotations:
           summary: "High heap-memory usage on ElasticSearch `{{ $labels.name }}` with host `{{ $labels.host }}`"
+      - alert: ElasticSearch Multiple Version
+        expr: count by (app_group) (sum by (app_group, version) (elasticsearch_clusterinfo_version_info)) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "There are `{{ $value }}` versions of ElasticSearch running on `{{ $labels.app_group }}` app group"
