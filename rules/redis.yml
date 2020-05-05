@@ -8,6 +8,7 @@ groups:
           severity: error
         annotations:
           summary: "Redis down (instance {{ $labels.instance }})"
+
       - alert: Redis Missing Backup
         expr: time() - redis_rdb_last_save_timestamp_seconds > 60 * 60 * 24
         for: 5m
@@ -15,6 +16,7 @@ groups:
           severity: warning
         annotations:
           summary: "Missing backup for 24 hours (instance {{ $labels.instance }})"
+
       - alert: Redis Replication Broken
         expr: delta(redis_connected_slaves[1d]) < 0
         for: 5m
@@ -22,6 +24,7 @@ groups:
           severity: error
         annotations:
           summary: "Replication broken (instance {{ $labels.instance }})"
+
       - alert: Redis Too Many Connections
         expr: redis_connected_clients > 100
         for: 5m
@@ -29,6 +32,7 @@ groups:
           severity: warning
         annotations:
           summary: "Too many connections (> 100) (instance {{ $labels.instance }})"
+
       - alert: Redis Not Enough Connections
         expr: redis_connected_clients < 5
         for: 5m
@@ -36,6 +40,7 @@ groups:
           severity: warning
         annotations:
           summary: "Not enough connections (instance {{ $labels.instance }})"
+
       - alert: Redis Rejected Connections
         expr: increase(redis_rejected_connections_total[1m]) > 0
         for: 5m
