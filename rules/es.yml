@@ -8,6 +8,7 @@ groups:
           severity: warning
         annotations:
           summary: "Unassigned shards, {{ $labels.instance }}, current: {{ $value }}"
+
       - alert: ElasticSearch Cluster Yellow
         expr: elasticsearch_cluster_health_status{color="yellow"} == 1
         for: 10m
@@ -15,6 +16,7 @@ groups:
           severity: warning
         annotations:
           summary: "Elastic Cluster Yellow, {{ $labels.instance }}"
+
       - alert: ElasticSearch Cluster Red
         expr: elasticsearch_cluster_health_status{color="red"} == 1
         for: 5m
@@ -22,6 +24,7 @@ groups:
           severity: critical
         annotations:
           summary: "Elastic Cluster Red, {{ $labels.instance }}"
+
       - alert: ElasticSearch Exporter Error
         expr: count({__name__=~"elasticsearch_clusterinfo_version_info|elasticsearch_jvm_buffer_pool_used_bytes"}) by (app_group) < 2
         for: 10m
@@ -29,6 +32,7 @@ groups:
           severity: warning
         annotations:
           summary: "Exporter experienced timeout when fetch elasticsearch data, {{ $labels.instance }}"
+
       - alert: ElasticsearchNodesNotMatch
         expr: count by (app_group) (elasticsearch_cluster_health_number_of_nodes{app_group!="hino", app_group!="hitzu"}) != avg by (app_group) (elasticsearch_cluster_health_number_of_nodes{app_group!="hino", app_group!="hitzu"})
         for: 5m
@@ -36,6 +40,7 @@ groups:
           severity: critical
         annotations:
           summary: "Number of container not match with total registered nodes in the cluster"
+
       - alert: ElasticSearch Read Only Index
         expr: sum by (app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
         for: 10s
@@ -43,6 +48,7 @@ groups:
           severity: critical
         annotations:
           summary: "There are {{ $value | humanize }} number of read-only index, this will cause data loss"
+
       - alert: ElasticsearchGlobalThroughputDrop
         expr: 100 - ((sum(elasticsearch_indices_docs_primary:per_app_group < 1000000) * 100) / sum(elasticsearch_indices_docs_primary:per_app_group offset 10m < 1000000)) > 15
         for: 1m
@@ -50,6 +56,7 @@ groups:
           severity: critical
         annotations:
           summary: "Elasticsearch global throughput drop more than 15% compared to last 10m"
+
       - alert: ElasticSearch High Heap Memory Usage
         expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90
         for: 1m
@@ -57,3 +64,11 @@ groups:
           severity: critical
         annotations:
           summary: "High heap-memory usage on ElasticSearch `{{ $labels.name }}` with host `{{ $labels.host }}`"
+
+      - alert: ElasticSearch Different Version
+        expr: count by (app_group) (sum by (app_group, version) (elasticsearch_clusterinfo_version_info)) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "There are `{{ $value }}` versions of ElasticSearch running on `{{ $labels.app_group }}` app group"

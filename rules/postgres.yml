@@ -8,6 +8,7 @@ groups:
           severity: error
         annotations:
           summary: "PostgreSQL is down (instance {{ $labels.instance }})"
+
       - alert: PostgreSQL Too Many Connections
         expr: sum by (datname) (pg_stat_activity_count{datname!~"template.*|postgres"}) > 100
         for: 5m
@@ -15,6 +16,7 @@ groups:
           severity: warning
         annotations:
           summary: "Too many connections (instance {{ $labels.instance }})"
+
       - alert: PostgreSQL DeadLocks
         expr: rate(pg_stat_database_deadlocks{datname!~"template.*|postgres"}[1m]) > 0
         for: 5m
@@ -22,6 +24,7 @@ groups:
           severity: warning
         annotations:
           summary: "Dead locks (instance {{ $labels.instance }})"
+
       - alert: PostgreSQL Slow Queries
         expr: avg(rate(pg_stat_activity_max_tx_duration{datname!~"template.*"}[1m])) BY (datname) > 60
         for: 5m

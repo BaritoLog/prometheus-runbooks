@@ -8,6 +8,7 @@ groups:
           severity: critical
         annotations:
           summary: "Node {{ $labels.instance }} is down"
+
       - alert: Node CPU High Load
         expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
         for: 5m
@@ -15,6 +16,7 @@ groups:
           severity: warning
         annotations:
           summary: "High CPU load, {{ $labels.instance }}, current: {{ $value | humanize}}%"
+
       - alert: Node Memory High Usage
         expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[30s]) + avg_over_time(node_memory_Cached_bytes[30s]) + avg_over_time(node_memory_Buffers_bytes[30s])) / avg_over_time(node_memory_MemTotal_bytes[30s]))) > 90
         for: 5m
@@ -22,6 +24,7 @@ groups:
           severity: warning
         annotations:
           summary: "Memory usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+
       - alert: ZFS Diskspace High Usage
         expr: (zfs_pool_size_bytes{pool="local"} - zfs_pool_free_bytes{pool="local"}) * 100 / zfs_pool_size_bytes{pool="local"} > 80
         for: 10m
@@ -29,6 +32,7 @@ groups:
           severity: warning
         annotations:
           summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+
       - alert: ZFS Diskspace High Usage
         expr: (zfs_pool_size_bytes{pool="local"} - zfs_pool_free_bytes{pool="local"}) * 100 / zfs_pool_size_bytes{pool="local"} > 90
         for: 5m
@@ -36,6 +40,7 @@ groups:
           severity: critical
         annotations:
           summary: "ZFS Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+
       - alert: Diskspace High Usage
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 80
         for: 10m
@@ -43,6 +48,7 @@ groups:
           severity: warning
         annotations:
           summary: "Disk Space usage is high, {{ $labels.instance }}, current: {{ $value | humanize }}%"
+
       - alert: Diskspace High Usage
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
         for: 5m

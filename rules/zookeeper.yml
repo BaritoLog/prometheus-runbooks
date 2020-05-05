@@ -8,6 +8,7 @@ groups:
           severity: warning
         annotations:
           summary: "Zookeeper down on instance: {{ $labels.instance }}"
+
       - alert: Zookeeper Server Down
         expr: avg(zk_up) by (app_group) == 0
         for: 2m
