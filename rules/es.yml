@@ -59,9 +59,17 @@ groups:
 
       - alert: ElasticSearch High Heap Memory Usage
         expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90
-        for: 1m
+        for: 5m
         labels:
           severity: critical
+        annotations:
+          summary: "High heap-memory usage on ElasticSearch `{{ $labels.name }}` with host `{{ $labels.host }}`"
+
+      - alert: ElasticSearch High Heap Memory Usage
+        expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90
+        for: 2m
+        labels:
+          severity: warning
         annotations:
           summary: "High heap-memory usage on ElasticSearch `{{ $labels.name }}` with host `{{ $labels.host }}`"
 
