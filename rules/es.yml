@@ -39,7 +39,7 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Number of container not match with total registered nodes in the cluster"
+          summary: "Number of container not match with total registered nodes in the cluster\nprobably exporter is not running in one (or more) of node"
 
       - alert: ElasticSearch Read Only Index
         expr: sum by (app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
