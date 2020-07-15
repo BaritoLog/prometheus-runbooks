@@ -26,7 +26,7 @@ groups:
           summary: "Healtcheck failed for *{{ $labels.node }}*, {{ $labels.check }}"
 
       - alert: Consul Detected Service Healthcheck Failed
-        expr: max(consul_health_node_status{status="critical"}) by (app_group, node, check) == 1
+        expr: max(consul_health_node_status{status="critical", node!~".*(consumer|producer).*"}) by (app_group, node, check) == 1
         for: 10m
         labels:
           severity: critical
@@ -34,7 +34,7 @@ groups:
           summary: "Healtcheck failed for *{{ $labels.node }}*, {{ $labels.check }}"
 
       - alert: Consul Missing Node Metrics
-        expr: max_over_time(consul_catalog_service_node_healthy[2d]) unless consul_catalog_service_node_healthy
+        expr: max_over_time(consul_catalog_service_node_healthy{service_name!~".*(consumer|producer).*"}[2d]) unless consul_catalog_service_node_healthy{service_name!~".*(consumer|producer).*"}
         for: 10m
         labels:
           severity: critical
