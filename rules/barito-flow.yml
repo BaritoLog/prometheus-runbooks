@@ -30,3 +30,13 @@ groups:
           tag: barito-flow-consumer-failed-request
         annotations:
           summary: "There are `{{ $value | humanize }}` requests with status `{{ $labels.result }}`"
+
+      - alert: Barito Flow Producer Missing Metrics
+        expr: |
+          max(max_over_time(go_info{job="barito-flow-producer"}[2d])) by (app_group, instance) unless max(go_info{job="barito-flow-producer"}) by (app_group, instance)
+        for: 2m
+        labels:
+          severity: critical
+          tag: barito-flow-producer-missing-metrics
+        annotations:
+          summary: "Missing Barito Flow Producer node metrics for `{{ $labels.app_group }}` instance `{{ $labels.instance }}`"
