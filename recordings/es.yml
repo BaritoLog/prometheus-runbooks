@@ -1,7 +1,7 @@
 groups:
-  - name: es_recording
+  - name: es-recording
     rules:
-    - record: elasticsearch_indices_docs_primary:per_topic
-      expr: sum by(app_group, topic) (max by (app_group, topic) (increase(elasticsearch_indices_docs_primary{topic=~".*logs", topic!~"\\..*"}[1m])) < 1000000)
-    - record: elasticsearch_indices_docs_primary:per_app_group
-      expr: sum by(app_group) (max by (app_group, topic) (increase(elasticsearch_indices_docs_primary{topic=~".*logs", topic!~"\\..*"}[1m])) < 1000000)
+      - record: elasticsearch_indices_docs_primary:per_topic
+        expr: sum by(app_group, topic) (max by (app_group, topic) (increase(elasticsearch_indices_docs_primary{topic=~".*logs", topic!~"\\..*"}[1m])) < 1000000)
+      - record: elasticsearch_indices_docs_primary:per_app_group
+        expr: sum by(app_group) (max by (app_group, topic) (increase(elasticsearch_indices_docs_primary{topic=~".*logs", topic!~"\\..*"}[1m])) < 1000000)

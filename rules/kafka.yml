@@ -1,90 +1,35 @@
 groups:
-  - name: kafka
+  - name: component-kafka
     rules:
-      - alert: Kafka Consumer Lag (experimental)
-        expr: round(sum by (app_group) (kafka_lag_manual_query) > 100000 )> (sum by (app_group) (kafka_incoming_log_per_minute{}) * 5)
-        for: 2m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Kafka lag more than 5m * current TPM, current: {{ $value | humanize}}"
-
-      - alert: Kafka Consumer Lag (experimental)
-        expr: round(sum by (app_group) (kafka_lag_manual_query) > 100000 )> (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
+      - alert: KafkaConsumerLagExperimental
+        expr: round(sum by (app_group) (kafka_lag_manual_query) > 100000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Kafka lag more than 15m * current TPM for 5 minutes, current: {{ $value | humanize}}"
+          summary: "Kafka lag more than 15 min (experimental) for {{ $labels.app_group }}, current value: {{ $value | humanize }}"
 
-      - alert: Kafka Consumer Lag
-        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 100000) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 5)
-        for: 2m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Kafka lag more than 5m * current TPM, current: {{ $value | humanize}}"
-
-      - alert: Kafka Consumer Lag
+      - alert: KafkaConsumerLag
         expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 100000) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Kafka lag more than 15m * current TPM for 5 minutes, current: {{ $value | humanize}}"
+          summary: "Kafka lag more than 15 min for {{ $labels.app_group }}, current value: {{ $value | humanize }}"
 
-      - alert: Kafka Topic Undereplicated Partition
-        expr: sum by (app_group, topic) (kafka_topic_partition_under_replicated_partition{topic!="__consumer_offsets"} == 1) > 0
-        for: 2m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Kafka topic under replicated partition, `{{ $labels.app_group }}.{{ $labels.topic }}`\nProbably one kafka is down"
-
-      - alert: Kafka Topic Undereplicated Partition
+      - alert: KafkaTopicUndereplicatedPartition
         expr: sum by (app_group, topic) (kafka_topic_partition_under_replicated_partition{topic!="__consumer_offsets"} > 1) > 0
-        for: 2m
+        for: 10m
         labels:
           severity: critical
         annotations:
-          summary: "Kafka topic under replicated partition, `{{ $labels.app_group }}.{{ $labels.topic }}`\nProbably more than one kafka are down"
+          summary: "Kafka topic under replicated partition `{{ $labels.app_group }}.{{ $labels.topic }}`\n"
+          description: "Could be one or more kafka server are down"
 
-      - alert: Kafka Server Down
-        expr: (count(kafka_brokers{} offset 1d) by (app_group) or vector(0)) - count(kafka_brokers{}) by (app_group) > 0
-        for: 10m
-        labels:
-          severity: info
-        annotations:
-          summary: "Exporter in one of kafka is down (there's probability the kafka itself is down)"
-
-      - alert: Kafka Server Down
-        expr: count(kafka_brokers{}) by (app_group) - max(kafka_brokers{}) by (app_group) > 0
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "One or more kafka is down on `{{ $labels.app_group}}`"
-
-      - alert: Kafka Server Down
+      - alert: KafkaServerDown
         expr: avg(kafka_brokers{}) by (app_group) == 0
         for: 5m
         labels:
           severity: critical
         annotations:
           summary: "All kafka in {{ $labels.app_group}} are down"
-
-      - alert: Kafka Exporter Error
-        expr: time() - max_over_time(kafka_consumergroup_current_offset:scraptime[1d]) > 600
-        for: 15m
-        labels:
-          severity: info
-        annotations:
-          summary: "Kafka exporter in `{{ $labels.app_group }}` can't fetch consumer group lag, instance `{{ $labels.instance}}`"
-
-      - alert: KafkaGlobalThroughputDrop
-        expr: 100 - ((sum(kafka_incoming_log_per_minute < 1000000) * 100) / sum(kafka_incoming_log_per_minute offset 10m < 1000000)) > 15
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Barito global throughput drop more than 15% compared to last 10m"

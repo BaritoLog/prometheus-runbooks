@@ -1,10 +1,10 @@
 groups:
-  - name: LXD
+  - name: component-lxd
     rules:
-      - alert: LXD Container Down
+      - alert: LXDContainerDown
         expr: lxd_container_running_status == 0
         for: 10m
         labels:
           severity: critical
         annotations:
-          summary: "Container `{{ $labels.container_name }}` of `{{ $labels.instance }}` is down"
+          summary: "Container `{{ $labels.container_name }}` on `{{ $labels.instance }}` is down"

@@ -1,18 +1,18 @@
 groups:
-  - name: Zookeeper
+  - name: component-zookeeper
     rules:
-      - alert: Zookeeper Server Down
+      - alert: ZookeeperDown
         expr: zk_up < 1
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Zookeeper down on instance: {{ $labels.instance }}"
-
-      - alert: Zookeeper Server Down
-        expr: avg(zk_up) by (app_group) == 0
-        for: 2m
+        for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "All zookeeper down"
+          summary: "Zookeeper is down {{ $labels.instance }} {{ $labels.name }}"
+
+      - alert: ZookeeperDown
+        expr: avg(zk_up) by (app_group) == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "All zookeeper in {{ $labels.app_group}} are down"

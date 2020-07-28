@@ -1,35 +1,34 @@
 groups:
-  - name: PostgreSQL
+  - name: component-postgresql
     rules:
-      - alert: PostgreSQL Down
+      - alert: PostgresDown
         expr: pg_up == 0
         for: 5m
         labels:
-          severity: error
+          severity: critical
         annotations:
-          summary: "PostgreSQL is down (instance {{ $labels.instance }})"
+          summary: "Postgresql is down {{ $labels.instance }} {{ $labels.name }}"
 
-      - alert: PostgreSQL Too Many Connections
-        expr: sum by (datname) (pg_stat_activity_count{datname!~"template.*|postgres"}) > 100
+      - alert: PostgresTooManyConnections
+        expr: sum by (datname) (pg_stat_activity_count{datname!~"template.*|postgres"}) > 200
         for: 5m
         labels:
-          severity: warning
+          severity: critical
         annotations:
-          summary: "Too many connections (instance {{ $labels.instance }})"
+          summary: "Postgresql too many connections {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}"
 
-      - alert: PostgreSQL DeadLocks
+      - alert: PostgresDeadLocks
         expr: rate(pg_stat_database_deadlocks{datname!~"template.*|postgres"}[1m]) > 0
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Dead locks (instance {{ $labels.instance }})"
+          summary: "Postgresql have dead locks {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}"
 
-      - alert: PostgreSQL Slow Queries
+      - alert: PostgresSlowQueries
         expr: avg(rate(pg_stat_activity_max_tx_duration{datname!~"template.*"}[1m])) BY (datname) > 60
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Slow queries (instance {{ $labels.instance }})"
-          description: "PostgreSQL executes slow queries (> 1min)"
+          summary: "Postgresql have slow queries (> 1m ) {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}"
