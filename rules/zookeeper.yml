@@ -9,7 +9,7 @@ groups:
         annotations:
           summary: "Zookeeper is down {{ $labels.instance }} {{ $labels.name }}"
 
-      - alert: ZookeeperDown
+      - alert: ZookeeperAllDown
         expr: avg(zk_up) by (app_group) == 0
         for: 5m
         labels:
