@@ -1,5 +1,5 @@
 groups:
-  - name: component-elasticsearch
+  - name: elasticsearch
     rules:
       - alert: ESClusterRed
         expr: elasticsearch_cluster_health_status{color="red"} == 1

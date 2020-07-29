@@ -1,5 +1,5 @@
 groups:
-  - name: component-kafka
+  - name: kafka
     rules:
       - alert: KafkaConsumerLagExperimental
         expr: round(sum by (app_group) (kafka_lag_manual_query) > 100000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)

@@ -1,5 +1,5 @@
 groups:
-  - name: component-barito-flow
+  - name: barito-flow
     rules:
       - alert: BaritoFlowMessageLoss
         expr: |

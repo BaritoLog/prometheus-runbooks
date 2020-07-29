@@ -1,39 +1,39 @@
 groups:
-  - name: component-node
+  - name: vm
     rules:
-      - alert: NodeDown
+      - alert: HostDown
         expr: count(node_load1{} offset 1d) by (instance) - count(node_load1{}) by (instance) > 0
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Node {{ $labels.instance }} {{ $labels.name }} is down"
+          summary: "Host {{ $labels.instance }} {{ $labels.name }} is down"
 
-      - alert: NodeCPUHighLoad
+      - alert: HostCPUHighLoad
         expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Node CPU usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize}}%"
+          summary: "Host CPU usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize}}%"
 
-      - alert: NodeMemoryHighUsage
+      - alert: HostMemoryHighUsage
         expr: (100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)) > 90
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Node memory usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize}}%"
+          summary: "Host memory usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize}}%"
 
-      - alert: NodeDiskspaceHighUsage
+      - alert: HostDiskspaceHighUsage
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Node diskspace usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}%"
+          summary: "Host diskspace usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}%"
 
-      - alert: NodeZFSDiskspaceHighUsage
+      - alert: HostZFSDiskspaceHighUsage
         expr: |-
           (zfs_pool_size_bytes{pool="local"} - zfs_pool_free_bytes{pool="local"}) * 100 / zfs_pool_size_bytes{pool="local"} > 90
           and
@@ -42,4 +42,4 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Node ZFS diskspace usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}%"
+          summary: "Host ZFS diskspace usage is high, {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}%"

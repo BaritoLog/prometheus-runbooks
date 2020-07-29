@@ -1,5 +1,5 @@
 groups:
-  - name: component-consul
+  - name: consul
     rules:
       - alert: ConsulAgentUnhealthy
         expr: consul_health_node_status{status="critical"} == 1

@@ -1,5 +1,5 @@
 groups:
-  - name: component-lxd
+  - name: lxd
     rules:
       - alert: LXDContainerDown
         expr: lxd_container_running_status == 0

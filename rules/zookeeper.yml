@@ -1,5 +1,5 @@
 groups:
-  - name: component-zookeeper
+  - name: zookeeper
     rules:
       - alert: ZookeeperDown
         expr: zk_up < 1
