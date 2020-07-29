@@ -1,5 +1,5 @@
 groups:
-  - name: Node
+  - name: component-node
     rules:
       - alert: NodeDown
         expr: count(node_load1{} offset 1d) by (instance) - count(node_load1{}) by (instance) > 0
