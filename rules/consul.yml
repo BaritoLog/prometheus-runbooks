@@ -3,7 +3,7 @@ groups:
     rules:
       - alert: ConsulAgentUnhealthy
         expr: consul_health_node_status{status="critical"} == 1
-        for: 5m
+        for: 10m
         labels:
           severity: critical
         annotations:
