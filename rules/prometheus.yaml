@@ -10,7 +10,7 @@ groups:
         expr: |-
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
-          max_over_time(prometheus_config_last_reload_successful{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m]) == 0
+          max_over_time(prometheus_config_last_reload_successful[5m]) == 0
         for: 10m
         labels:
           severity: critical
@@ -23,9 +23,9 @@ groups:
           summary: Prometheus encounters more than 3% errors sending alerts to any Alertmanager.
         expr: |-
           min without(alertmanager) (
-            rate(prometheus_notifications_errors_total{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+            rate(prometheus_notifications_errors_total[5m])
           /
-            rate(prometheus_notifications_sent_total{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+            rate(prometheus_notifications_sent_total[5m])
           )
           * 100
           > 3
@@ -42,7 +42,7 @@ groups:
         expr: |-
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
-          max_over_time(prometheus_notifications_alertmanagers_discovered{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m]) < 1
+          max_over_time(prometheus_notifications_alertmanagers_discovered[5m]) < 1
         for: 10m
         labels:
           severity: warning
@@ -56,12 +56,12 @@ groups:
           summary: Prometheus fails to send samples to remote storage.
         expr: |-
           (
-            rate(prometheus_remote_storage_failed_samples_total{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+            rate(prometheus_remote_storage_failed_samples_total[5m])
           /
             (
-              rate(prometheus_remote_storage_failed_samples_total{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+              rate(prometheus_remote_storage_failed_samples_total[5m])
             +
-              rate(prometheus_remote_storage_succeeded_samples_total{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+              rate(prometheus_remote_storage_succeeded_samples_total[5m])
             )
           )
           * 100
@@ -81,9 +81,9 @@ groups:
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
           (
-            max_over_time(prometheus_remote_storage_highest_timestamp_in_seconds{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+            max_over_time(prometheus_remote_storage_highest_timestamp_in_seconds[5m])
           - on(job, instance) group_right
-            max_over_time(prometheus_remote_storage_queue_highest_sent_timestamp_seconds{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+            max_over_time(prometheus_remote_storage_queue_highest_sent_timestamp_seconds[5m])
           )
           > 120
         for: 15m
@@ -97,7 +97,7 @@ groups:
             evaluate {{ printf "%.0f" $value }} rules in the last 5m.
           summary: Prometheus is failing rule evaluations.
         expr: |-
-          increase(prometheus_rule_evaluation_failures_total{job="po-prometheus-operator-prometheus",namespace="infrastructure"}[5m])
+          increase(prometheus_rule_evaluation_failures_total[5m])
           > 0
         for: 15m
         labels:
