@@ -13,7 +13,7 @@ groups:
 
       - alert: BaritoFlowTPSExceededSpike
         expr: |
-          increase(barito_producer_tps_exceeded_total[1m]) > (increase(barito_producer_tps_exceeded_total[1m] offset 1m) * 1.5)
+          increase(barito_producer_tps_exceeded_total[2m])/2 > (increase(barito_producer_tps_exceeded_total[2m] offset 1m)/2 * 1.5)
         for: 5m
         labels:
           severity: warning

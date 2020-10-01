@@ -6,7 +6,7 @@ groups:
       - record: kafka_topic_partition_current_offset:per_app_group_topic
         expr: avg by (app_group, topic) ( sum by (app_group, topic, instance) ( kafka_topic_partition_current_offset{topic!="__consumer_offsets"} ) )
       - record: kafka_incoming_log_per_minute
-        expr: avg(sum(increase(kafka_topic_partition_current_offset{}[1m])) by (topic, instance, app_group)) by (topic, app_group)
+        expr: avg(sum(increase(kafka_topic_partition_current_offset{}[2m])/2) by (topic, instance, app_group)) by (topic, app_group)
       - record: kafka_consumergroup_current_offset:per_topic_partition
         expr: avg by (topic, partition, app_group, consumergroup) (kafka_consumergroup_current_offset)
       - record: kafka_topic_partition_current_offset:per_topic_partition
