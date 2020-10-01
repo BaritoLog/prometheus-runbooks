@@ -1,0 +1,37 @@
+
+groups:
+  - name: barito-blackbox
+    rules:
+      - alert: BaritoProbePushfailed
+        expr: |
+          increase(barito_push_log_failed{}[2m]) >= 1
+        for: 3m
+        labels:
+          severity: warning
+          tag: barito-flow-message-loss
+        annotations:
+          summary: "Prober failed to push log to appgroup: `{{ $labels.app_group}}`, failed `{{ $value | humanize }}` times for last 2m"
+      - alert: BaritoProbeKibanaFailed
+        expr: |
+          increase(barito_probe_kibana_failed{}[2m]) > 1
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prober failed access kibana, appgroup: `{{ $labels.app_group}}`"
+      - alert: BaritoProbeElasticsearchFailed
+        expr: |
+          increase(barito_probe_elasticsearch_failed{}[5m]) > 4
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prober failed access elasticcsearch, appgroup: `{{ $labels.app_group}}`"
+      - alert: BaritoProbeDelayTooLong
+        expr: |
+          sort_desc(barito_probe_elasticsearch_delay_second > 600) and increase(barito_push_log_failed{}[5m]) < 4
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Prober result delayed, appgroup: `{{ $labels.app_group}}`, delay for: `{{ $value | humanize }}s` "
