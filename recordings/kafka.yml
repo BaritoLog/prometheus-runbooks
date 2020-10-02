@@ -16,4 +16,4 @@ groups:
       - record: kafka_consumergroup_current_offset:per_topic_partition:max1h
         expr: sum by (app_group, topic, partition)  (max_over_time(kafka_consumergroup_current_offset:per_topic_partition{consumergroup="barito-group"}[1h]))
       - record: kafka_lag_manual_query
-        expr: sum by (app_group, topic) ( kafka_topic_partition_current_offset:per_topic_partition - (sum by (app_group, topic, partition) (kafka_consumergroup_current_offset:per_topic_partition:max2d) >= 0) )
+        expr: sum by (app_group, topic) (kafka_topic_partition_current_offset:per_topic_partition - kafka_consumergroup_current_offset:per_topic_partition:max2d)
