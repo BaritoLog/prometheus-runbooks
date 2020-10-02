@@ -5,7 +5,7 @@ groups:
       - alert: BaritoProbePushfailed
         expr: |
           increase(barito_push_log_failed{}[2m]) >= 1
-        for: 3m
+        for: 5m
         labels:
           severity: warning
           tag: barito-flow-message-loss
@@ -14,7 +14,7 @@ groups:
       - alert: BaritoProbeKibanaFailed
         expr: |
           increase(barito_probe_kibana_failed{}[2m]) > 1
-        for: 3m
+        for: 10m
         labels:
           severity: critical
         annotations:
@@ -22,7 +22,7 @@ groups:
       - alert: BaritoProbeElasticsearchFailed
         expr: |
           increase(barito_probe_elasticsearch_failed{}[5m]) > 4
-        for: 3m
+        for: 10m
         labels:
           severity: critical
         annotations:
@@ -30,8 +30,8 @@ groups:
       - alert: BaritoProbeDelayTooLong
         expr: |
           sort_desc(barito_probe_elasticsearch_delay_second > 600) and increase(barito_push_log_failed{}[5m]) < 4
-        for: 3m
+        for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Prober result delayed, appgroup: `{{ $labels.app_group}}`, delay for: `{{ $value | humanize }}s` "
+          summary: "Prober result delayed, appgroup: `{{ $labels.app_group}}`, delay for: "
