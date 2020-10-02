@@ -12,7 +12,7 @@ groups:
       - record: kafka_topic_partition_current_offset:per_topic_partition
         expr: avg by (topic, partition, app_group, consumergroup) (kafka_topic_partition_current_offset)
       - record: kafka_consumergroup_current_offset:per_topic_partition:max2d
-        expr: sum by (app_group, topic, partition)  (max_over_time(kafka_consumergroup_current_offset:per_topic_partition{consumergroup="barito-group"}[2d:5m]))
+        expr: max by (app_group, topic, partition)  (max_over_time(kafka_consumergroup_current_offset:per_topic_partition{consumergroup="barito-group", env="production"}[2d:5m]))
       - record: kafka_consumergroup_current_offset:per_topic_partition:max1h
         expr: sum by (app_group, topic, partition)  (max_over_time(kafka_consumergroup_current_offset:per_topic_partition{consumergroup="barito-group"}[1h]))
       - record: kafka_lag_manual_query
