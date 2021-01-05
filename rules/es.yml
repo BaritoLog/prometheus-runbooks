@@ -16,11 +16,4 @@ groups:
           severity: critical
         annotations:
           summary: "Elastic have {{ $value | humanize }} read-only indices on {{ $labels.app_group }}"
-
-      - alert: ESHighHeapMemoryUsage
-        expr: (elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes) * 100 > 90
-        for: 10m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Elastic heap memory usage high {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}%"
+          

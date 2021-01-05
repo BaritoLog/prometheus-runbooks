@@ -9,22 +9,6 @@ groups:
         annotations:
           summary: "Host {{ $labels.instance }} {{ $labels.nodename }} is down"
 
-      - alert: HostCPUHighLoad
-        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Host CPU usage is high, {{ $labels.instance }} {{ $labels.nodename }}, current value: {{ $value | humanize}}%"
-
-      - alert: HostMemoryHighUsage
-        expr: (100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)) > 90
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Host memory usage is high, {{ $labels.instance }} {{ $labels.nodename }}, current value: {{ $value | humanize}}%"
-
       - alert: HostDiskspaceHighUsage
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
         for: 5m

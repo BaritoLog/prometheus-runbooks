@@ -2,19 +2,10 @@
 groups:
   - name: barito-blackbox
     rules:
-      - alert: BaritoProbePushfailed
-        expr: |
-          increase(barito_push_log_failed{}[2m]) >= 1
-        for: 5m
-        labels:
-          severity: warning
-          tag: barito-flow-message-loss
-        annotations:
-          summary: "Prober failed to push log to appgroup: `{{ $labels.app_group}}`, failed `{{ $value | humanize }}` times for last 2m"
       - alert: BaritoProbeKibanaFailed
         expr: |
           increase(barito_probe_kibana_failed{}[2m]) > 1
-        for: 10m
+        for: 20m
         labels:
           severity: critical
         annotations:

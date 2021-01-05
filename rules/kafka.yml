@@ -17,15 +17,6 @@ groups:
         annotations:
           summary: "Kafka lag more than 15 min for {{ $labels.app_group }}, current value: {{ $value | humanize }}"
 
-      - alert: KafkaTopicUndereplicatedPartition
-        expr: sum by (app_group, topic) (kafka_topic_partition_under_replicated_partition{topic!="__consumer_offsets"} > 1) > 0
-        for: 10m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Kafka topic under replicated partition `{{ $labels.app_group }}.{{ $labels.topic }}`\n"
-          description: "Could be one or more kafka server are down"
-
       - alert: KafkaServerDown
         expr: avg(kafka_brokers{}) by (app_group) == 0
         for: 5m
