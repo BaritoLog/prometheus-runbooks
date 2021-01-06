@@ -10,18 +10,10 @@ groups:
           severity: critical
         annotations:
           summary: "Prober failed access kibana, appgroup: `{{ $labels.app_group}}`"
-      - alert: BaritoProbeElasticsearchFailed
-        expr: |
-          increase(barito_probe_elasticsearch_failed{}[5m]) > 4
-        for: 10m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Prober failed access elasticcsearch, appgroup: `{{ $labels.app_group}}`"
       - alert: BaritoProbeDelayTooLong
         expr: |
           sort_desc(barito_probe_elasticsearch_delay_second > 600) and increase(barito_push_log_failed{}[5m]) < 4
-        for: 5m
+        for: 10m
         labels:
           severity: warning
         annotations:
