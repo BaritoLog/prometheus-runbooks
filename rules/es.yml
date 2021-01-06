@@ -2,7 +2,7 @@ groups:
   - name: elasticsearch
     rules:
       - alert: ESClusterRed
-        expr: elasticsearch_cluster_health_status{color="red"} == 1
+        expr: avg by (app_name,app_group) (elasticsearch_cluster_health_status{color="red"}) == 1
         for: 5m
         labels:
           severity: critical
@@ -10,7 +10,7 @@ groups:
           summary: "Elastic cluster status is red {{ $labels.instance }} {{ $labels.name }}"
 
       - alert: ESReadOnlyIndex
-        expr: sum by (app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
+        expr: sum by (app_name,app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
         for: 30s
         labels:
           severity: critical
