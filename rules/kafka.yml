@@ -2,7 +2,7 @@ groups:
   - name: kafka
     rules:
       - alert: KafkaConsumerLagExperimental
-        expr: round(sum by (app_group) (kafka_lag_manual_query) > 100000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
+        expr: round(sum by (app_group) (kafka_lag_manual_query) > 1000000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 5m
         labels:
           severity: critical
@@ -10,7 +10,7 @@ groups:
           summary: "Kafka lag more than 15 min (experimental) for {{ $labels.app_group }}, current value: {{ $value | humanize }}"
 
       - alert: KafkaConsumerLag
-        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 100000) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
+        expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 1000000) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 5m
         labels:
           severity: critical
