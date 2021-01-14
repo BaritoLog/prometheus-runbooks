@@ -7,7 +7,7 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Elastic cluster status is red {{ $labels.instance }} {{ $labels.name }}"
+          summary: "Elastic cluster status is red on {{ $labels.app_group }}"
 
       - alert: ESReadOnlyIndex
         expr: sum by (app_name,app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
