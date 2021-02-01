@@ -2,7 +2,7 @@ groups:
   - name: coch
     rules:
       - alert: ConformanceCheckerConfigurationDiff
-        expr: conformance_checker_gauge != 1001
+        expr: max_over_time(conformance_checker_gauge[8m]) != 1001
         for: 10m
         labels:
           severity: warning
