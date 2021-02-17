@@ -4,7 +4,7 @@ groups:
     rules:
       - alert: BaritoProbeKibanaFailed
         expr: |
-          increase(barito_probe_kibana_failed{}[2m]) > 1
+          sum by (app_group) (increase(barito_probe_kibana_failed[5m])) > 3
         for: 20m
         labels:
           severity: critical
