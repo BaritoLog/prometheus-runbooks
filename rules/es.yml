@@ -1,19 +1,20 @@
 groups:
   - name: elasticsearch
     rules:
-      - alert: ESClusterRed
+      - alert: BaritoESClusterRed
         expr: avg by (app_name,app_group) (elasticsearch_cluster_health_status{color="red"}) == 1
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Elastic cluster status is red on {{ $labels.app_group }}"
 
-      - alert: ESReadOnlyIndex
+      - alert: BaritoESReadOnlyIndex
         expr: sum by (app_name,app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
         for: 30s
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Elastic have {{ $value | humanize }} read-only indices on {{ $labels.app_group }}"
-          

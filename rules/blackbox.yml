@@ -1,4 +1,3 @@
-
 groups:
   - name: barito-blackbox
     rules:
@@ -8,13 +7,16 @@ groups:
         for: 20m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
-          summary: "Prober failed access kibana, appgroup: `{{ $labels.app_group}}`"
+          summary: "Prober failed access kibana, appgroup: {{ $labels.app_group}}"
+
       - alert: BaritoProbeDelayTooLong
         expr: |
           sort_desc(barito_probe_elasticsearch_delay_second > 1200) and increase(barito_push_log_failed{}[5m]) < 4
         for: 20m
         labels:
           severity: warning
+          team: cloud-observability
         annotations:
-          summary: "Prober result delayed, appgroup: `{{ $labels.app_group}}`, delay for: `{{ $value | humanize }}s`"
+          summary: "Prober result delayed, appgroup: {{ $labels.app_group}}, delay for: {{ $value | humanize }}s"

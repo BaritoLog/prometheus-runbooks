@@ -6,5 +6,6 @@ groups:
         for: 10m
         labels:
           severity: warning
+          team: cloud-governance
         annotations:
           summary: "Configuration for {{ $labels.namespace_prefix }}, {{ $labels.terraform_module_name }}, {{ $labels.service_name }}, {{ $labels.ansible_role }}, {{ $labels.ansible_role_version }}, {{ $labels.name }} from Node/VM is not matched to configuration from Yggdrasil"

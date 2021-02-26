@@ -1,7 +1,7 @@
 groups:
   - name: prometheus
     rules:
-      - alert: PrometheusBadConfig
+      - alert: BaritoPrometheusBadConfig
         annotations:
           description:
             Prometheus {{$labels.namespace}}/{{$labels.pod}} has failed to
@@ -14,13 +14,14 @@ groups:
         for: 10m
         labels:
           severity: critical
+          team: cloud-observability
 
-      - alert: PrometheusErrorSendingAlertsToAnyAlertmanager
+      - alert: BaritoPrometheusErrorSendingAlertsToAnyAlertmanager
         annotations:
           description:
             '{{ printf "%.1f" $value }}% minimum errors while sending alerts
             from Prometheus {{$labels.namespace}}/{{$labels.pod}} to any Alertmanager.'
-          summary: Prometheus encounters more than 3% errors sending alerts to any Alertmanager.
+          summary: Prometheus encounters more than 5% errors sending alerts to any Alertmanager.
         expr: |-
           min without(alertmanager) (
             rate(prometheus_notifications_errors_total[5m])
@@ -28,12 +29,13 @@ groups:
             rate(prometheus_notifications_sent_total[5m])
           )
           * 100
-          > 3
+          > 5
         for: 15m
         labels:
-          severity: critical
+          severity: warning
+          team: cloud-observability
 
-      - alert: PrometheusNotConnectedToAlertmanagers
+      - alert: BaritoPrometheusNotConnectedToAlertmanagers
         annotations:
           description:
             Prometheus {{$labels.namespace}}/{{$labels.pod}} is not connected
@@ -46,8 +48,9 @@ groups:
         for: 10m
         labels:
           severity: warning
+          team: cloud-observability
 
-      - alert: PrometheusRemoteStorageFailures
+      - alert: BaritoPrometheusRemoteStorageFailures
         annotations:
           description:
             Prometheus {{$labels.namespace}}/{{$labels.pod}} failed to send
@@ -69,8 +72,9 @@ groups:
         for: 15m
         labels:
           severity: critical
+          team: cloud-observability
 
-      - alert: PrometheusRemoteWriteBehind
+      - alert: BaritoPrometheusRemoteWriteBehind
         annotations:
           description:
             Prometheus {{$labels.namespace}}/{{$labels.pod}} remote write is
@@ -89,8 +93,9 @@ groups:
         for: 15m
         labels:
           severity: critical
+          team: cloud-observability
 
-      - alert: PrometheusRuleFailures
+      - alert: BaritoPrometheusRuleFailures
         annotations:
           description:
             Prometheus {{$labels.namespace}}/{{$labels.pod}} has failed to
@@ -101,4 +106,5 @@ groups:
           > 0
         for: 15m
         labels:
-          severity: critical
+          severity: warning
+          team: cloud-observability

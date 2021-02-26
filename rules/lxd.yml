@@ -1,10 +1,11 @@
 groups:
   - name: lxd
     rules:
-      - alert: LXDContainerDown
+      - alert: BaritoLXDContainerDown
         expr: lxd_container_running_status == 0
         for: 10m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
-          summary: "Container `{{ $labels.container_name }}` on `{{ $labels.instance }}` is down"
+          summary: "Container {{ $labels.container_name }} on {{ $labels.instance }} is down"

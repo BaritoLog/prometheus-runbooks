@@ -1,26 +1,29 @@
 groups:
   - name: kafka
     rules:
-      - alert: KafkaConsumerLagExperimental
+      - alert: BaritoKafkaConsumerLagExperimental
         expr: round(sum by (app_group) (kafka_lag_manual_query) > 1000000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Kafka lag more than 15 min (experimental) for {{ $labels.app_group }}, current value: {{ $value | humanize }}"
 
-      - alert: KafkaConsumerLag
+      - alert: BaritoKafkaConsumerLag
         expr: round(sum(avg(sum(kafka_consumergroup_lag{}) by (instance, topic, app_group)) by (topic, app_group)) by (app_group) > 1000000) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Kafka lag more than 15 min for {{ $labels.app_group }}, current value: {{ $value | humanize }}"
 
-      - alert: KafkaServerDown
+      - alert: BaritoKafkaServerDown
         expr: avg(kafka_brokers{}) by (app_group) == 0
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "All kafka in {{ $labels.app_group}} are down"

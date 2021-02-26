@@ -1,10 +1,11 @@
 groups:
   - name: zookeeper
     rules:
-      - alert: ZookeeperAllDown
+      - alert: BaritoZookeeperAllDown
         expr: avg(zk_up) by (app_group) == 0
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "All zookeeper in {{ $labels.app_group}} are down"

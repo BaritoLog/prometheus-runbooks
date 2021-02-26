@@ -1,23 +1,25 @@
 groups:
   - name: vm
     rules:
-      - alert: HostDown
+      - alert: BaritoHostDown
         expr: count(node_load1{} offset 1d) by (instance) - count(node_load1{}) by (instance) > 0
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Host {{ $labels.instance }} {{ $labels.nodename }} is down"
 
-      - alert: HostDiskspaceHighUsage
+      - alert: BaritoHostDiskspaceHighUsage
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Host diskspace usage is high, {{ $labels.instance }} {{ $labels.nodename }}, current value: {{ $value | humanize }}%"
 
-      - alert: HostZFSDiskspaceHighUsage
+      - alert: BaritoHostZFSDiskspaceHighUsage
         expr: |-
           (zfs_pool_size_bytes{pool="local"} - zfs_pool_free_bytes{pool="local"}) * 100 / zfs_pool_size_bytes{pool="local"} > 90
           and
@@ -25,5 +27,6 @@ groups:
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Host ZFS diskspace usage is high, {{ $labels.instance }} {{ $labels.nodename }}, current value: {{ $value | humanize }}%"

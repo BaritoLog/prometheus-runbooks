@@ -1,26 +1,29 @@
 groups:
   - name: postgresql
     rules:
-      - alert: PostgresDown
+      - alert: BaritoPostgresDown
         expr: pg_up == 0
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Postgresql is down {{ $labels.instance }} {{ $labels.name }}"
 
-      - alert: PostgresTooManyConnections
+      - alert: BaritoPostgresTooManyConnections
         expr: sum by (datname) (pg_stat_activity_count{datname!~"template.*|postgres"}) > pg_settings_max_connections * 0.9
         for: 5m
         labels:
           severity: critical
+          team: cloud-observability
         annotations:
           summary: "Postgresql too many connections {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}"
 
-      - alert: PostgresSlowQueries
+      - alert: BaritoPostgresSlowQueries
         expr: avg(rate(pg_stat_activity_max_tx_duration{datname!~"template.*"}[2m])/2) BY (datname) > 60
         for: 5m
         labels:
           severity: warning
+          team: cloud-observability
         annotations:
           summary: "Postgresql have slow queries (> 1m ) {{ $labels.instance }} {{ $labels.name }}, current value: {{ $value | humanize }}"
