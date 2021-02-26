@@ -2,7 +2,7 @@ groups:
   - name: kafka
     rules:
       - alert: BaritoKafkaConsumerLagExperimental
-        expr: round(sum by (app_group) (kafka_lag_manual_query) > 1000000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)
+        expr: (round(sum by (app_group) (kafka_lag_manual_query) > 1000000 ) > (sum by (app_group) (kafka_incoming_log_per_minute{}) * 15)) unless sum by (app_group) (kafka_consumergroup_lag{}) 
         for: 5m
         labels:
           severity: critical
