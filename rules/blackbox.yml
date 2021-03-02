@@ -6,6 +6,7 @@ groups:
           sum by (app_group) (increase(barito_probe_kibana_failed[10m])) > 6
         for: 20m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -16,6 +17,7 @@ groups:
           sort_desc(barito_probe_elasticsearch_delay_second > 1200) and increase(barito_push_log_failed{}[5m]) < 4
         for: 20m
         labels:
+          integration: "slack"
           severity: warning
           team: cloud-observability
         annotations:

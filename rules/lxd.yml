@@ -5,6 +5,7 @@ groups:
         expr: lxd_container_running_status == 0
         for: 10m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:

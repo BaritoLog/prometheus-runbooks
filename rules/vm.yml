@@ -5,6 +5,7 @@ groups:
         expr: count(node_load1{} offset 1d) by (instance) - count(node_load1{}) by (instance) > 0
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -14,6 +15,7 @@ groups:
         expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"} ) / node_filesystem_size_bytes{mountpoint="/"}  * 100 > 90
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -26,6 +28,7 @@ groups:
           zfs_pool_free_bytes{pool="local"} < (150 * 1000 * 1000 * 1000)
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:

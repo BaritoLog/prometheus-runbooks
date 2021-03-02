@@ -13,6 +13,7 @@ groups:
           max_over_time(prometheus_config_last_reload_successful[5m]) == 0
         for: 10m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
 
@@ -32,6 +33,7 @@ groups:
           > 5
         for: 15m
         labels:
+          integration: "slack"
           severity: warning
           team: cloud-observability
 
@@ -47,6 +49,7 @@ groups:
           max_over_time(prometheus_notifications_alertmanagers_discovered[5m]) < 1
         for: 10m
         labels:
+          integration: "slack"
           severity: warning
           team: cloud-observability
 
@@ -71,6 +74,7 @@ groups:
           > 1
         for: 15m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
 
@@ -92,6 +96,7 @@ groups:
           > 120
         for: 15m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
 
@@ -106,5 +111,6 @@ groups:
           > 0
         for: 15m
         labels:
+          integration: "slack"
           severity: warning
           team: cloud-observability

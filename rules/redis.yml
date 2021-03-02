@@ -5,6 +5,7 @@ groups:
         expr: redis_up == 0
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -14,6 +15,7 @@ groups:
         expr: delta(redis_connected_slaves[1d]) < 0
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -23,6 +25,7 @@ groups:
         expr: redis_connected_clients > 200
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -32,6 +35,7 @@ groups:
         expr: increase(redis_rejected_connections_total[2m])/2 > 0
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -41,6 +45,7 @@ groups:
         expr: time() - redis_rdb_last_save_timestamp_seconds > 60 * 60 * 24
         for: 5m
         labels:
+          integration: "slack"
           severity: warning
           team: cloud-observability
         annotations:

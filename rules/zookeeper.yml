@@ -5,6 +5,7 @@ groups:
         expr: avg(zk_up) by (app_group) == 0
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:

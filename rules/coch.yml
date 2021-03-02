@@ -5,6 +5,7 @@ groups:
         expr: max_over_time(conformance_checker_gauge[8m]) != 1001
         for: 10m
         labels:
+          integration: "slack"
           severity: warning
           team: cloud-governance
         annotations:

@@ -5,6 +5,7 @@ groups:
         expr: avg by (app_name,app_group) (elasticsearch_cluster_health_status{color="red"}) == 1
         for: 5m
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
@@ -14,6 +15,7 @@ groups:
         expr: sum by (app_name,app_group) (elasticsearch_indices_settings_stats_read_only_indices) > 0
         for: 30s
         labels:
+          integration: "slack,pagerduty"
           severity: critical
           team: cloud-observability
         annotations:
