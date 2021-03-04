@@ -2,11 +2,41 @@ groups:
   - name: coch
     rules:
       - alert: ConformanceCheckerConfigurationDiff
-        expr: max_over_time(conformance_checker_gauge[8m]) != 1001
+        expr: floor(quantile_over_time(0.5, conformance_checker_gauge[5m]) / (10^12)) == 1
         for: 10m
         labels:
           integration: "slack"
           severity: warning
           team: cloud-governance
         annotations:
-          summary: "Configuration for {{ $labels.namespace_prefix }}, {{ $labels.terraform_module_name }}, {{ $labels.service_name }}, {{ $labels.ansible_role }}, {{ $labels.ansible_role_version }}, {{ $labels.name }} from Node/VM is not matched to configuration from Yggdrasil"
+          summary: "Configuration from Node/VM is not matched to configuration from Yggdrasil with value {{ $value }} for {{ $labels.namespace_prefix }}, {{ $labels.terraform_module_name }}, {{ $labels.terraform_module_version }}, {{ $labels.hostname }}, {{ $labels.ansible_role }}, {{ $labels.name }}"
+
+      - alert: ConformanceCheckerConfigurationVMOnly
+        expr: floor(quantile_over_time(0.5, conformance_checker_gauge[5m]) / (10^12)) == 2
+        for: 10m
+        labels:
+          integration: "slack"
+          severity: warning
+          team: cloud-governance
+        annotations:
+          summary: "Configuration is only coming from Node/VM with value {{ $value }} for {{ $labels.namespace_prefix }}, {{ $labels.terraform_module_name }}, {{ $labels.terraform_module_version }}, {{ $labels.hostname }}, {{ $labels.ansible_role }}, {{ $labels.name }}"
+
+      - alert: ConformanceCheckerConfigurationYggdrasilOnly
+        expr: floor(quantile_over_time(0.5, conformance_checker_gauge[5m]) / (10^12)) == 3
+        for: 10m
+        labels:
+          integration: "slack"
+          severity: warning
+          team: cloud-governance
+        annotations:
+          summary: "Configuration is only coming from Yggdrasil with value {{ $value }} for {{ $labels.namespace_prefix }}, {{ $labels.terraform_module_name }}, {{ $labels.terraform_module_version }}, {{ $labels.hostname }}, {{ $labels.ansible_role }}, {{ $labels.name }}"
+
+      - alert: ConformanceCheckerDriftFromBaseline
+        expr: 100 > (floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^3)) % (10^3) + floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^6)) % (10^3))/(floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^3)) % (10^3) + floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^6)) % (10^3)+ floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^9)) % (10^3))*100 >= 50
+        for: 10m
+        labels:
+          integration: "slack"
+          severity: warning
+          team: cloud-governance
+        annotations:
+          summary: "Drifting {{ $value }} % from baseline for {{ $labels.namespace_prefix }}, {{ $labels.terraform_module_name }}, {{ $labels.terraform_module_version }}, {{ $labels.hostname }}, {{ $labels.ansible_role }}, {{ $labels.name }}"
