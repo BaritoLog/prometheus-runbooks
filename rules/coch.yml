@@ -42,14 +42,14 @@ groups:
           summary: "Baseline config is only coming from Node/VM with value {{ $value | humanize }} for component in project `{{ $labels.namespace_prefix }}`, module `{{ $labels.terraform_module_name }} {{ $labels.terraform_module_version }}`, hostname `{{ $labels.hostname }}`, ansible `{{ $labels.ansible_role }}`, with name `{{ $labels.name }}`"
 
       - alert: ConformanceCheckerDriftFromBaseline
-        expr: ((floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^3)) % (10^3) + floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^6)) % (10^3))/(floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^3)) % (10^3) + floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^6)) % (10^3)+ floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^9)) % (10^3))*((floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^12)) % (10^3)) * 3 % 11 % 2))*100 >= 50
+        expr: ((floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^3)) % (10^3) + floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^6)) % (10^3))/(floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^3)) % (10^3) + floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^6)) % (10^3)+ floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^9)) % (10^3))*((floor(quantile_over_time(0.5, conformance_checker_optimal_gauge[5m]) / (10^12)) % (10^3)) * 3 % 11 % 2))*100 >= 60
         for: 10m
         labels:
           integration: "slack"
           severity: warning
           team: cloud-governance
         annotations:
-          summary: "Drifting {{ $value | humanizePercentage }} % from baseline for component in project `{{ $labels.namespace_prefix }}`, module `{{ $labels.terraform_module_name }} {{ $labels.terraform_module_version }}`, hostname `{{ $labels.hostname }}`, ansible `{{ $labels.ansible_role }}`, with name `{{ $labels.name }}`"
+          summary: "Drifting {{ $value | humanize }} % from baseline for component in project `{{ $labels.namespace_prefix }}`, module `{{ $labels.terraform_module_name }} {{ $labels.terraform_module_version }}`, hostname `{{ $labels.hostname }}`, ansible `{{ $labels.ansible_role }}`, with name `{{ $labels.name }}`"
 
       - alert: ConformanceCheckerHighBucketsCount
         expr: 8000 > conformance_checker_buckets_gauge{index="conformance-checker-optimal-*"} >= 5000
