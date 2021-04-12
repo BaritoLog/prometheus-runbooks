@@ -1,6 +1,17 @@
 groups:
   - name: barito-blackbox
     rules:
+      - alert: BaritoProbePushFailed
+        expr: |
+          increase(barito_push_log_failed{}[5m]) > 8
+        for: 20m
+        labels:
+          integration: "slack"
+          severity: warning
+          team: cloud-observability
+        annotations:
+          summary: "Prober failed push log to barito, please check if producer / router are running, appgroup: {{ $labels.app_group}}"
+
       - alert: BaritoProbeKibanaFailed
         expr: |
           sum by (app_group) (increase(barito_probe_kibana_failed[10m])) > 6
